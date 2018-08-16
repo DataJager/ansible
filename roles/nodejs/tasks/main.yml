@@ -1,6 +1,23 @@
 ---
-  ### Install node and npm
-  - name: Install nodejs
-    package: name=nodejs state=present
-  - name Install npm
+  #TODO: Append nvm version number to install.sh filename
+  #TODO: Add option for input of node version and checksum
+  - name: Get NVM 0.33.11 install script (install.sh)
+    get_url:
+      url: https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh
+      dest: /tmp/install_nvm.sh
+      #REF: This is a sha1 checksum
+      checksum: 75c00c4458b9067277b06043f0251f8324bf149c
+  - name: run NVM install script
+    script: /tmp/install_nvm.sh
+  - name: Show currently installed versions of Node
+    command: nvm ls
+  #TODO: Replace node version number with variable
+  - name: Install Node 8.11.4 LTS
+    command: nvm install v8.11.4
+  - name: Set default Node to 8.11.4 LTS
+    command: nvm alias default v8.11.34
+  #Use yum to install npm
+  - name: Install npm (using package manager)
     package: name=npm state=present
+  - name: Update npm using npm (not package manager)
+    command: npm update
