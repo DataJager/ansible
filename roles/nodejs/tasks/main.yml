@@ -1,0 +1,6 @@
+---
+  ### Install node and npm
+  - name: Install nodejs
+    package: name=nodejs state=present
+  - name Install npm
+    package: name=npm state=present
