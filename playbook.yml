@@ -1,10 +1,6 @@
 ---
 - hosts: all
-  become: true
-  become_user: root
-# For CentOS 7.4 the remote_user is "centos"
-# For CentOS 7.2 and earlier the remote_user is "root"
-# TODO: Add check for CentOS version and become appropriate user accordingly
-  remote_user: centos
+  #node is installed per user, so remote_user: is used in place of become:
+  remote_user: vagrant
   roles:
     - nodejs
