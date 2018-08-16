@@ -1,5 +1,4 @@
 ---
-  #TODO: Append nvm version number to install.sh filename?
   - name: If installed, remove the epel-release version of npm
     package: name=nodejs state=absent
   - name: If installed, remove the epel-release version of nodejs
@@ -9,10 +8,9 @@
     get_url:
       url: https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh
       dest: ~/nvm_install.sh
-      #REF: This is a sha1 checksum
       checksum: sha1:75c00c4458b9067277b06043f0251f8324bf149c
 
-  - name: Chmod of NVM install script to 700
+  - name: Make the script file executable
     file:
       path: ~/nvm_install.sh
       mode: 0700
@@ -20,29 +18,15 @@
   - name: run NVM install script
     command: ~/nvm_install.sh
     register: result
+
+  #Since the NVM install is just a script, have it output to screen
   - debug:
       msg: " nvm_install.sh output: {{ result.stdout }} "
 
   #TODO: Replace node version number with variable
   - name: Install Node.js
-    shell: '. {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install node'
+    shell: '. {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install node {{ node_version }}'
     args:
       creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
       chdir: "{{ ansible_env.HOME }}"
       executable: /bin/bash
-  #Deprecated: This makes more of a mess than intended as it somehow installs
-  #  nodejs again and but doesn't link it for non-root users.
-  #  the epel-repository also has a much older version of node (6.14.3-1.el7)
-  #Use yum to install npm
-
-  # - name: Enable epel-repository
-  #   package: name=epel-release state=present
-  #
-  # - name: Install npm (using 'yum' or 'apt-get')
-  #   package: name=npm state=present
-
-  # - name: Have npm update itself
-  #   command: npm install -g npm
-  #   register: result
-  # - debug:
-  #     msg: "npm update output: {{ result.stdout }}"

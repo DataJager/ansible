@@ -1,6 +1,9 @@
 ---
 - hosts: all
+  vars:
+    node_version: 8.11.4
   #node is installed per user, so remote_user: is used in place of become:
+  #TODO: Prompt for remote_user
   remote_user: vagrant
   roles:
     - nodejs
